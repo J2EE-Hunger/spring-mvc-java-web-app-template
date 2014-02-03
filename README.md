@@ -1,4 +1,4 @@
-spring-mvc-scala-web-app-template
+spring-mvc-java-web-app-template
 =================================
 
 Template project for web-application development using Spring MVC and Java
