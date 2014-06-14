@@ -11,12 +11,18 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springsource.loaded.Plugin;
+import org.springsource.loaded.agent.GroovyPlugin;
+import org.springsource.loaded.agent.SpringLoadedPreProcessor;
+import org.springsource.loaded.agent.SpringPlugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -53,6 +59,7 @@ public class BaseLauncher {
     }
 
     public void doStart(String... args) throws Exception {
+        configureClassAutoReload();
         if (isLaunchFromIDE()) {
             setUpLogDirectory();
 //            if (StringUtils.containsIgnoreCase(System.getProperty("user.home"), "dionis")) {
@@ -71,6 +78,18 @@ public class BaseLauncher {
         }
 
         startServer(getPortOrDefault(args, 8888));
+    }
+
+    private void configureClassAutoReload() {
+        final List<Plugin> globalPluginsView = new ArrayList<>(SpringLoadedPreProcessor.getGlobalPlugins());
+        for (Plugin globalPlugin : globalPluginsView) {
+            getLogger().info("Registered plugin: [{}]", globalPlugin);
+            if(globalPlugin instanceof SpringPlugin || globalPlugin instanceof GroovyPlugin) {
+                getLogger().info("Removing plugin: [{}]", globalPlugin);
+                SpringLoadedPreProcessor.unregisterGlobalPlugin(globalPlugin);
+            }
+        }
+        SpringLoadedPreProcessor.registerGlobalPlugin(new SpringReloadPlugin());
     }
 
     private void setUpLogDirectory() {

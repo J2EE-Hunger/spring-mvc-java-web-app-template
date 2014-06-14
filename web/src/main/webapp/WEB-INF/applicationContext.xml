@@ -15,7 +15,7 @@
 
     <context:property-placeholder location="classpath*:config.properties"/>
     <context:annotation-config/>
-    <context:component-scan base-package="name.dargiri.web"/>
+    <context:component-scan base-package="name.dargiri"/>
 
     <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource">
         <property name="driverClass" value="${jdbc.driverClass}"/>
