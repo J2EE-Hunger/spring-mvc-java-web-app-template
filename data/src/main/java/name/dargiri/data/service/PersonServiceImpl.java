@@ -1,12 +1,12 @@
 package name.dargiri.data.service;
 
-import name.dargiri.data.dao.PersonDAO;
+import name.dargiri.data.dao.PersonRepository;
 import name.dargiri.data.dto.PersonDTO;
-import name.dargiri.data.model.Model;
 import name.dargiri.data.model.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +19,23 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class PersonServiceImpl implements PersonService {
     @Autowired
-    PersonDAO personDAO;
+    PersonRepository personRepository;
 
     @Transactional
     @Override
     public PersonDTO create(PersonDTO dto) {
         Person entity = toEntity(dto);
-        personDAO.persist(entity);
+        personRepository.save(entity);
         return toDTO(entity);
     }
 
     @Transactional
     @Override
     public PersonDTO update(PersonDTO dto) {
-        Person person = personDAO.find(dto.getId());
+        Person person = personRepository.findOne(dto.getId());
         if (person != null) {
             person.setUsername(dto.getUsername());
-            personDAO.persist(person);
+            personRepository.save(person);
             return toDTO(person);
         } else {
             return null;
@@ -43,8 +43,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonDTO find(UUID id) {
-        Person person = personDAO.find(id);
+    public PersonDTO find(Long id) {
+        Person person = personRepository.findOne(id);
         if (person != null) {
             return toDTO(person);
         } else {
@@ -54,16 +54,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Transactional
     @Override
-    public void delete(UUID id) {
-        Person person = personDAO.find(id);
-        if (person != null) {
-            personDAO.delete(person);
-        }
+    public void delete(Long id) {
+        Assert.notNull(id);
+        personRepository.delete(id);
     }
 
     @Override
     public List<PersonDTO> findAll() {
-        List<Person> all = personDAO.findAll();
+        List<Person> all = personRepository.findAll();
         List<PersonDTO> dtos = new ArrayList<>(all.size());
         for (Person person : all) {
             dtos.add(toDTO(person));

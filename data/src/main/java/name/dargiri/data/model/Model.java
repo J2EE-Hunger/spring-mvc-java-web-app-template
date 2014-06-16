@@ -8,5 +8,4 @@ import java.io.Serializable;
 public interface Model<ID extends Serializable> {
     ID getId();
     boolean isNew();
-    void assignId();
 }

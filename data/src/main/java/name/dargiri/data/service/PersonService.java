@@ -13,9 +13,9 @@ public interface PersonService {
 
     PersonDTO update(PersonDTO dto);
 
-    PersonDTO find(UUID id);
+    PersonDTO find(Long id);
 
-    void delete(UUID id);
+    void delete(Long id);
 
     List<PersonDTO> findAll();
 }

@@ -5,6 +5,7 @@ import name.dargiri.data.model.Person;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,21 +15,15 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by dionis on 2/3/14.
  */
-public class PersonDAOImplTest extends SpringDbTest {
-    PersonDAOImpl dao;
-
-    @Before
-    public void setUp() throws Exception {
-        dao = new PersonDAOImpl();
-        dao.entityManager = em;
-
-    }
+public class PersonRepositoryImplTest extends SpringDbTest {
+    @Resource
+    PersonRepository dao;
 
     @Test
     public void Person_should_have_id_assigned_when_created() {
         Person entity = new Person();
         entity.setUsername("dionis");
-        dao.persist(entity);
+        dao.save(entity);
 
         assertTrue(entity.getId() != null);
     }
@@ -38,12 +33,12 @@ public class PersonDAOImplTest extends SpringDbTest {
     it_should_be_found_by_id_after_persisting() {
         Person entity = new Person();
         entity.setUsername("dionis");
-        dao.persist(entity);
+        dao.save(entity);
 
         assertTrue(entity.getId() != null);
         flushAndClear();
 
-        Person found = dao.find(entity.getId());
+        Person found = dao.findOne(entity.getId());
         assertTrue(found != null);
         assertEquals(entity, found);
     }
@@ -52,13 +47,13 @@ public class PersonDAOImplTest extends SpringDbTest {
     public void it_should_not_be_found_by_id_if_not_found() {
         Person entity = new Person();
         entity.setUsername("dionis");
-        dao.persist(entity);
+        dao.save(entity);
 
         assertTrue(entity.getId() != null);
 
         flushAndClear();
 
-        Person found = dao.find(UUID.randomUUID());
+        Person found = dao.findOne(-1L);
         assertTrue(found == null);
     }
 
@@ -66,8 +61,8 @@ public class PersonDAOImplTest extends SpringDbTest {
     public void Find_all_should_return_all_persisted() {
         Person e1 = new Person();
         Person e2 = new Person();
-        dao.persist(e1);
-        dao.persist(e2);
+        dao.save(e1);
+        dao.save(e2);
 
         flushAndClear();
 

@@ -1,35 +1,28 @@
 package name.dargiri.data.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.UUID;
+import javax.persistence.*;
 
 /**
  * Created by dionis on 2/3/14.
  */
 @Entity
 @Table(name = "people")
-public class Person extends AbstractModel<UUID> implements Model<UUID> {
+public class Person extends AbstractModel<Long> {
 
     @Id
     @Column(name = "id")
-    private UUID id;
+    @GeneratedValue(generator = "person_id_generator", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "person_id_generator", sequenceName = "person_id_seq", allocationSize = 1)
+    private Long id;
     @Column(name = "username")
     private String username;
 
     @Override
-    public void assignId() {
-        id = UUID.randomUUID();
-    }
-
-    @Override
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

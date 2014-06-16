@@ -17,7 +17,7 @@ public class PersonTest {
     }
 
     private Pair<Person> personPairWithSameId() {
-        final UUID id = UUID.randomUUID();
+        final Long id = -1L;
         Person p1 = new Person();
         p1.setId(id);
         Person p2 = new Person();

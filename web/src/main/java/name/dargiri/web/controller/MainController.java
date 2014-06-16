@@ -20,14 +20,14 @@ import java.util.UUID;
 @RequestMapping(value = {""})
 public class MainController {
     public static class PersonForm {
-        private UUID id;
+        private Long id;
         private String username;
 
-        public UUID getId() {
+        public Long getId() {
             return id;
         }
 
-        public void setId(UUID id) {
+        public void setId(Long id) {
             this.id = id;
         }
 
@@ -77,7 +77,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/edit/{id}")
-    public ModelAndView editForm(@PathVariable("id") UUID id) {
+    public ModelAndView editForm(@PathVariable("id") Long id) {
         PersonDTO personDTO = personService.find(id);
         if (personDTO != null) {
             ModelAndView mav = new ModelAndView("main/person");
@@ -103,7 +103,7 @@ public class MainController {
     }
 
     @RequestMapping(value = "/delete/{id}")
-    public ModelAndView delete(@PathVariable("id") UUID id) {
+    public ModelAndView delete(@PathVariable("id") Long id) {
         personService.delete(id);
         return new ModelAndView("redirect:/");
     }

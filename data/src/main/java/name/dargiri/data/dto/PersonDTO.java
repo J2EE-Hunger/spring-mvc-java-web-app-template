@@ -6,15 +6,15 @@ import java.util.UUID;
  * Created by dionis on 2/3/14.
  */
 public class PersonDTO {
-    private final UUID id;
+    private final Long id;
     private final String username;
 
-    public PersonDTO(UUID id, String username) {
+    public PersonDTO(Long id, String username) {
         this.id = id;
         this.username = username;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
